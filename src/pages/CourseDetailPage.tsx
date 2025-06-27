@@ -76,11 +76,11 @@ export function CourseDetailPage() {
                   (option, index) => (
                     <label
                       key={index}
-                      className={`block p-4 rounded-lg border cursor-pointer transition-colors duration-200
+                      className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-colors duration-200
                                ${
                                  answers[currentQuestionIndex] === index
-                                   ? 'border-blue-500 bg-blue-50'
-                                   : 'border-gray-300 hover:border-gray-400'
+                                   ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
+                                   : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                                }`}
                     >
                       <input
@@ -89,12 +89,12 @@ export function CourseDetailPage() {
                         value={index}
                         checked={answers[currentQuestionIndex] === index}
                         onChange={() => selectAnswer(index)}
-                        className="sr-only"
+                        className="mt-1 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500 focus:ring-2"
                         aria-describedby={`option-${index}-description`}
                       />
                       <span
                         id={`option-${index}-description`}
-                        className="text-gray-900 font-medium"
+                        className="text-gray-900 font-medium flex-1 leading-relaxed"
                       >
                         {option}
                       </span>
