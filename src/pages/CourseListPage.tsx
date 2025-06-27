@@ -3,7 +3,7 @@ import { useLanguage } from '../hooks/useLanguage';
 import { courses } from '../data/courses';
 
 export function CourseListPage() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -58,14 +58,14 @@ export function CourseListPage() {
                   id={`course-title-${course.id}`}
                   className="text-xl font-semibold text-gray-900 mb-3"
                 >
-                  {course.title}
+                  {course.title[currentLanguage.code]}
                 </h2>
 
                 <p
                   id={`course-description-${course.id}`}
                   className="text-gray-600 mb-6 line-clamp-3"
                 >
-                  {course.description}
+                  {course.description[currentLanguage.code]}
                 </p>
 
                 <div className="flex items-center justify-between">
@@ -89,7 +89,7 @@ export function CourseListPage() {
                            bg-blue-600 text-white text-sm font-medium rounded-md 
                            hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
                            transition-colors duration-200"
-                  aria-label={`Start ${course.title} course`}
+                  aria-label={`Start ${course.title[currentLanguage.code]} course`}
                 >
                   {t('courses.start')}
                   <span className="ml-2" aria-hidden="true">

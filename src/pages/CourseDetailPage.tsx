@@ -7,7 +7,7 @@ import { courses } from '../data/courses';
 
 export function CourseDetailPage() {
   const { courseId } = useParams<{ courseId: string }>();
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [showQuiz, setShowQuiz] = useState(false);
 
   const course = courses.find(c => c.id === courseId);
@@ -36,6 +36,10 @@ export function CourseDetailPage() {
     return <Navigate to="/courses" replace />;
   }
 
+  // Get content in current language
+  const courseTitle = course.title[currentLanguage.code];
+  const courseContent = course.content[currentLanguage.code];
+
   if (showQuiz && !isCompleted) {
     return (
       <main id="main-content" className="min-h-screen bg-gray-50 py-8">
@@ -44,7 +48,7 @@ export function CourseDetailPage() {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-bold text-gray-900">
-                  {t('quiz.title')}: {course.title}
+                  {t('quiz.title')}: {courseTitle}
                 </h1>
                 <button
                   onClick={() => setShowQuiz(false)}
@@ -64,37 +68,39 @@ export function CourseDetailPage() {
 
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                {currentQuestion.question}
+                {currentQuestion?.question?.[currentLanguage.code]}
               </h2>
 
               <div className="space-y-3">
-                {currentQuestion.options.map((option, index) => (
-                  <label
-                    key={index}
-                    className={`block p-4 rounded-lg border cursor-pointer transition-colors duration-200
+                {currentQuestion?.options?.[currentLanguage.code]?.map(
+                  (option, index) => (
+                    <label
+                      key={index}
+                      className={`block p-4 rounded-lg border cursor-pointer transition-colors duration-200
                                ${
                                  answers[currentQuestionIndex] === index
                                    ? 'border-blue-500 bg-blue-50'
                                    : 'border-gray-300 hover:border-gray-400'
                                }`}
-                  >
-                    <input
-                      type="radio"
-                      name={`question-${currentQuestionIndex}`}
-                      value={index}
-                      checked={answers[currentQuestionIndex] === index}
-                      onChange={() => selectAnswer(index)}
-                      className="sr-only"
-                      aria-describedby={`option-${index}-description`}
-                    />
-                    <span
-                      id={`option-${index}-description`}
-                      className="text-gray-900 font-medium"
                     >
-                      {option}
-                    </span>
-                  </label>
-                ))}
+                      <input
+                        type="radio"
+                        name={`question-${currentQuestionIndex}`}
+                        value={index}
+                        checked={answers[currentQuestionIndex] === index}
+                        onChange={() => selectAnswer(index)}
+                        className="sr-only"
+                        aria-describedby={`option-${index}-description`}
+                      />
+                      <span
+                        id={`option-${index}-description`}
+                        className="text-gray-900 font-medium"
+                      >
+                        {option}
+                      </span>
+                    </label>
+                  ),
+                )}
               </div>
             </div>
 
@@ -153,25 +159,37 @@ export function CourseDetailPage() {
             <div className="space-y-4 mb-8 text-left">
               {course.quiz.questions.map((question, index) => (
                 <div key={question.id} className="border rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">{question.question}</h3>
+                  <h3 className="font-semibold mb-2">
+                    {question.question[currentLanguage.code]}
+                  </h3>
                   <p
                     className={`mb-2 ${results.answers[index] === question.correctAnswer ? 'text-green-600' : 'text-red-600'}`}
                   >
-                    Your answer: {question.options[results.answers[index]]}
+                    Your answer:{' '}
+                    {
+                      question.options[currentLanguage.code][
+                        results.answers[index]
+                      ]
+                    }
                     {results.answers[index] === question.correctAnswer
                       ? ' ✓'
                       : ' ✗'}
                   </p>
                   {results.answers[index] !== question.correctAnswer && (
                     <p className="text-green-600 mb-2">
-                      Correct answer: {question.options[question.correctAnswer]}{' '}
+                      Correct answer:{' '}
+                      {
+                        question.options[currentLanguage.code][
+                          question.correctAnswer
+                        ]
+                      }{' '}
                       ✓
                     </p>
                   )}
                   {question.explanation && (
                     <p className="text-gray-600 text-sm">
                       <strong>{t('quiz.explanation')}:</strong>{' '}
-                      {question.explanation}
+                      {question.explanation[currentLanguage.code]}
                     </p>
                   )}
                 </div>
@@ -216,11 +234,11 @@ export function CourseDetailPage() {
               {t('course.back')}
             </Link>
 
-            <ReadAloudButton text={course.content} />
+            <ReadAloudButton text={courseContent} />
           </div>
 
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            {course.title}
+            {courseTitle}
           </h1>
 
           <div className="flex items-center space-x-6 mb-8 text-sm text-gray-600">
@@ -240,7 +258,7 @@ export function CourseDetailPage() {
 
           <div
             className="prose prose-lg max-w-none mb-8"
-            dangerouslySetInnerHTML={{ __html: course.content }}
+            dangerouslySetInnerHTML={{ __html: courseContent }}
           />
 
           <div className="flex justify-center">

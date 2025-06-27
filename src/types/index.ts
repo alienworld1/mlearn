@@ -2,9 +2,9 @@
 
 export interface Course {
   id: string;
-  title: string;
-  description: string;
-  content: string;
+  title: Record<'en' | 'es', string>;
+  description: Record<'en' | 'es', string>;
+  content: Record<'en' | 'es', string>;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   estimatedTime: string;
   quiz: Quiz;
@@ -18,10 +18,10 @@ export interface Quiz {
 
 export interface Question {
   id: string;
-  question: string;
-  options: string[];
+  question: Record<'en' | 'es', string>;
+  options: Record<'en' | 'es', string[]>;
   correctAnswer: number; // Index of correct option
-  explanation?: string;
+  explanation?: Record<'en' | 'es', string>;
 }
 
 export interface QuizResult {
