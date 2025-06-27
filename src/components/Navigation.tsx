@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { LanguageToggle } from './LanguageToggle';
+import { OfflineStatus } from './OfflineStatus';
 
 export function Navigation() {
   const { t } = useLanguage();
@@ -58,8 +59,9 @@ export function Navigation() {
             </Link>
           </div>
 
-          {/* Language toggle */}
-          <div className="flex items-center">
+          {/* Language toggle and status */}
+          <div className="flex items-center space-x-4">
+            <OfflineStatus />
             <LanguageToggle />
           </div>
         </div>

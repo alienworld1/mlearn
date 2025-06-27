@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
+import { useOffline } from '../hooks/useOffline';
 import { ReadAloudButton } from '../components/ReadAloudButton';
 import { useQuiz } from '../hooks/useQuiz';
 import { courses } from '../data/courses';
@@ -8,6 +9,7 @@ import { courses } from '../data/courses';
 export function CourseDetailPage() {
   const { courseId } = useParams<{ courseId: string }>();
   const { t, currentLanguage } = useLanguage();
+  const { isOffline } = useOffline();
   const [showQuiz, setShowQuiz] = useState(false);
 
   const course = courses.find(c => c.id === courseId);
@@ -254,6 +256,14 @@ export function CourseDetailPage() {
               </span>
               {course.estimatedTime}
             </span>
+            {isOffline && (
+              <span className="flex items-center text-blue-600">
+                <span className="mr-1" aria-hidden="true">
+                  💾
+                </span>
+                {t('status.cachedContent')}
+              </span>
+            )}
           </div>
 
           <div
